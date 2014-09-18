@@ -177,6 +177,12 @@ class SimpleSwitchSnort(app_manager.RyuApp):
             self.add_flow(datapath, 10, match_irc_out, actions)
             self.add_flow(datapath, 10, match_irc_in, actions)
 
+            # Detect Ping packet
+            match_ping = parser.OFPMatch(in_port=in_port,
+                                         eth_type=ether.ETH_TYPE_IP,
+                                         ip_proto=inet.IPPROTO_ICMP)
+            self.add_flow(datapath, 100, match_ping, actions)
+
         # For packet-out
         actions = l2_learning_actions
         data = None
