@@ -83,7 +83,7 @@ class SimpleSwitchSnort(app_manager.RyuApp):
                                         ipv4_dst=block_dst,
                                         ipv4_src=block_src)
 
-            self.add_flow(datapath, 10, bot_match, drop_actions)
+            self.add_flow(datapath, 100, bot_match, drop_actions)
 
     @set_ev_cls(snortlib.EventAlert, MAIN_DISPATCHER)
     def _dump_alert(self, ev):
@@ -181,7 +181,7 @@ class SimpleSwitchSnort(app_manager.RyuApp):
             match_ping = parser.OFPMatch(in_port=in_port,
                                          eth_type=ether.ETH_TYPE_IP,
                                          ip_proto=inet.IPPROTO_ICMP)
-            self.add_flow(datapath, 100, match_ping, actions)
+            self.add_flow(datapath, 10, match_ping, actions)
 
         # For packet-out
         actions = l2_learning_actions
