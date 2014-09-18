@@ -154,7 +154,7 @@ class SimpleSwitchSnort(app_manager.RyuApp):
 
         l2_learning_actions = [parser.OFPActionOutput(out_port)]
         actions = [parser.OFPActionOutput(out_port),
-                   parser.OFPActionOutput(self.snort_porto)]
+                   parser.OFPActionOutput(self.snort_port)]
         # actions = [parser.OFPActionOutput(out_port),
         #            parser.OFPActionOutput(self.snort_port)]
 
