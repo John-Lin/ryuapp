@@ -163,24 +163,35 @@ class SimpleSwitchSnort(app_manager.RyuApp):
             match = parser.OFPMatch(in_port=in_port, eth_dst=dst)
             self.add_flow(datapath, 1, match, l2_learning_actions)
 
+            # Detect HTTP server traffic
+            match_http_out = parser.OFPMatch(in_port=in_port,
+                                             eth_dst=dst,
+                                             eth_type=ether.ETH_TYPE_IP,
+                                             ip_proto=inet.IPPROTO_TCP,
+                                             tcp_dst=80)
+
             # Detect Botnet infected via IRC channel
-            match_irc_out = parser.OFPMatch(in_port=in_port,
-                                            eth_type=ether.ETH_TYPE_IP,
-                                            ip_proto=inet.IPPROTO_TCP,
-                                            tcp_dst=6667)
+            # match_irc_out = parser.OFPMatch(in_port=in_port,
+            #                                 eth_dst=dst,
+            #                                 eth_type=ether.ETH_TYPE_IP,
+            #                                 ip_proto=inet.IPPROTO_TCP,
+            #                                 tcp_dst=6667)
 
             match_irc_in = parser.OFPMatch(in_port=in_port,
+                                           eth_dst=dst,
                                            eth_type=ether.ETH_TYPE_IP,
                                            ip_proto=inet.IPPROTO_TCP,
                                            tcp_src=6667)
 
-            self.add_flow(datapath, 10, match_irc_out, actions)
+            self.add_flow(datapath, 10, match_http_out, actions)
             self.add_flow(datapath, 10, match_irc_in, actions)
 
             # Detect Ping packet
             match_ping = parser.OFPMatch(in_port=in_port,
+                                         eth_dst=dst,
                                          eth_type=ether.ETH_TYPE_IP,
                                          ip_proto=inet.IPPROTO_ICMP)
+
             self.add_flow(datapath, 10, match_ping, actions)
 
         # For packet-out
